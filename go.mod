@@ -1,3 +1,3 @@
-module github.com/hugo-toha/toha/v4
+module codex-devlab/customs_theme
 
 go 1.21
