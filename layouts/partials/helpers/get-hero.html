@@ -13,10 +13,33 @@
 {{ .Scratch.Set "heroScratch" $heroImage }}
 
 {{/* if hero image is not provided, then use the default hero image */}}
+{{/* if not $heroImage */}}
+  {{/* $heroImage := resources.Get "images/default-hero.jpg"*/}}
+  {{/* .Scratch.Set "heroScratch" $heroImage */}}
+{{/* end */}}
+
+
+{{/* if hero image is not provided, then use a random hero image */}}
 {{ if not $heroImage }}
-  {{ $heroImage := resources.Get "images/default-hero.jpg"}}
-  {{ .Scratch.Set "heroScratch" $heroImage }}
+  {{ $heroImages := readDir "static/images/rand_images" }}  {{/* 이미지 디렉토리 읽기 */}}
+  {{ $imageCount := len $heroImages }}
+  {{ if gt $imageCount 0 }}  {{/* 이미지 파일이 하나 이상 있을 경우 */}}
+    {{ $randomIndex := int (math.Floor (mul (float $imageCount) (math.Rand))) }}{{/* 현재 시간 기반 랜덤 인덱스 */}}
+      {{/*  {{ range $heroImages }}  */}} {{/* 디버깅 */}}
+        {{/*  {{ errorf "Hero Image Found: %s" .Name }}  */}} 
+      {{/*  {{ end }}  */}}
+
+    {{ $randomImage := index $heroImages $randomIndex }}
+    {{ $randomImagePath := printf "images/rand_images/%s" $randomImage.Name }}
+
+
+    {{/*  {{ printf "Hero randomImagePath: %s" $randomImagePath | errorf }}  */}} {{/* 디버깅 */}}
+    {{ $heroImage := resources.Get $randomImagePath }}
+    {{ .Scratch.Set "heroScratch" $heroImage }}
+
+  {{ end }}
 {{ end }}
+
 
 {{ $heroImage := .Scratch.Get "heroScratch" }}
 
