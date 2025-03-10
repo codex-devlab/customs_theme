@@ -3,6 +3,11 @@
   <head>
     <title>{{ .Page.Title }}</title>
     <!------ ADD COMMON HEADERS -------->
+    {{ with site.Params.seoTemplate }}
+      {{ if templates.Exists (printf "partials/%s" .) }}
+        {{ partial . $ }}
+      {{ end }}
+    {{ end }}
     {{- partial "header.html" . -}}
     {{ template "_internal/opengraph.html" . }}
     {{ template "_internal/twitter_cards.html" . }}
